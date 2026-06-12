@@ -32,7 +32,9 @@ android {
         jvmTarget = "17"
     }
     publishing {
-        singleVariant("release")
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
     buildFeatures {
         compose = true
