@@ -31,7 +31,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 dependencies {
-    implementation("com.github.cys020628:ios-style-wheel-picker:v1.0.1")
+    implementation("com.github.cys020628:ios-style-wheel-picker:v1.0.2")
 }
 ```
 
