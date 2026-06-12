@@ -1,0 +1,1 @@
+# Library consumer proguard rules
