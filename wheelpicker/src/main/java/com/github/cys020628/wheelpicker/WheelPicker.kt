@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import kotlin.OptIn
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,23 +25,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.OptIn
 import kotlin.math.abs
 import kotlin.math.min
 
 /**
- * A customizable iOS-style wheel picker built on Jetpack Compose.
+ * Jetpack Compose 기반 커스텀 iOS 스타일 휠 피커 컴포넌트
  *
- * @param T The type of items in the list.
- * @param items The list of data to display in the wheel picker.
- * @param modifier The modifier to be applied to the wheel picker layout.
- * @param initialItem The item that should be initially selected.
- * @param itemHeight The height of each item in the picker. Default is 36.dp.
- * @param visibleCount The number of items visible simultaneously. Must be an odd number (e.g., 3, 5, 7) for symmetrical alignment.
- * @param onSelected Callback invoked when an item is centered and selected.
- * @param selectedColor The color of the selected (centered) text item.
- * @param unselectedColor The color of the unselected text items.
- * @param textStyle The base text style to be applied to text items.
- * @param itemContent Optional composable lambda to custom render each item. If provided, default text rendering is bypassed.
+ * @param T 아이템 리스트의 제네릭 타입
+ * @param items 화면에 표시할 데이터 리스트
+ * @param modifier 레이아웃 수정을 위한 모디파이어
+ * @param initialItem 최초 선택 상태로 지정할 아이템
+ * @param itemHeight 개별 아이템의 높이 (기본값: 36.dp)
+ * @param visibleCount 동시에 보여줄 아이템 개수 (중앙 정렬을 위해 홀수 권장)
+ * @param onSelected 아이템이 중앙에 고정되어 선택 완료되었을 때 실행할 콜백
+ * @param selectedColor 선택된 아이템의 텍스트 색상
+ * @param unselectedColor 선택되지 않은 아이템의 텍스트 색상
+ * @param textStyle 텍스트 기본 스타일 지정
+ * @param itemContent 개별 아이템 렌더링 커스터마이징을 위한 람다 식
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -53,16 +53,16 @@ fun <T> WheelPicker(
     itemHeight: Dp = 36.dp,
     visibleCount: Int = 3,
     onSelected: (T) -> Unit,
-    selectedColor: Color = Color(0xFF007AFF), // iOS default blue
+    selectedColor: Color = Color(0xFF007AFF), // iOS 기본 블루 색상
     unselectedColor: Color = Color.Gray,
     textStyle: TextStyle = TextStyle.Default,
     itemContent: (@Composable (item: T, isSelected: Boolean) -> Unit)? = null,
 ) {
-    /** Calculate initial index */
+    /** 초기 선택 인덱스 계산 */
     val initialIndex = items.indexOf(initialItem).coerceAtLeast(0)
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
 
-    /** Calculate current centered item index */
+    /** 현재 중앙에 위치한 아이템 인덱스 계산 */
     val centerIndex by remember {
         derivedStateOf {
             val layoutInfo = listState.layoutInfo
@@ -80,7 +80,7 @@ fun <T> WheelPicker(
         }
     }
 
-    /** Trigger callback when scrolling stops and item is centered */
+    /** 스크롤이 멈추고 새로운 아이템이 선택되었을 때 콜백 호출 */
     LaunchedEffect(listState.isScrollInProgress, centerIndex) {
         if (!listState.isScrollInProgress && centerIndex in items.indices) {
             onSelected(items[centerIndex])
@@ -100,20 +100,20 @@ fun <T> WheelPicker(
         ) {
             items(items.size) { index ->
                 val item = items[index]
-                /** Relative distance from the center index */
+                /** 중앙 인덱스로부터의 상대적 거리 계산 */
                 val distanceFromCenter = if (centerIndex != -1) {
                     (index - centerIndex).toFloat()
                 } else {
                     0f
                 }
 
-                /** Normalize distance range [0f, 1f] */
+                /** 거리 값 [0f, 1f] 범위로 정규화 */
                 val normalizedDistance = min(1f, abs(distanceFromCenter))
                 
-                /** Scale factor (1f at center, decreasing to 0.85f) */
+                /** 스케일 팩터 계산 (중앙 1f, 멀어질수록 0.85f까지 축소) */
                 val scale = 1f - 0.15f * normalizedDistance
 
-                /** Alpha factor (1f at center, decreasing to 0.3f) */
+                /** 알파 값 계산 (중앙 1f, 멀어질수록 0.3f까지 투명도 적용) */
                 val alpha = 0.3f + (1f - normalizedDistance) * 0.7f
 
                 val isSelected = (index == centerIndex)
@@ -158,4 +158,34 @@ fun <T> WheelPicker(
             }
         }
     }
+}
+
+/**
+ * WheelPicker의 별칭 컴포넌트 (IosStylePicker 라는 이름으로도 동일하게 호출 가능)
+ */
+@Composable
+fun <T> IosStylePicker(
+    items: List<T>,
+    modifier: Modifier = Modifier,
+    initialItem: T,
+    itemHeight: Dp = 36.dp,
+    visibleCount: Int = 3,
+    onSelected: (T) -> Unit,
+    selectedColor: Color = Color(0xFF007AFF),
+    unselectedColor: Color = Color.Gray,
+    textStyle: TextStyle = TextStyle.Default,
+    itemContent: (@Composable (item: T, isSelected: Boolean) -> Unit)? = null,
+) {
+    WheelPicker(
+        items = items,
+        modifier = modifier,
+        initialItem = initialItem,
+        itemHeight = itemHeight,
+        visibleCount = visibleCount,
+        onSelected = onSelected,
+        selectedColor = selectedColor,
+        unselectedColor = unselectedColor,
+        textStyle = textStyle,
+        itemContent = itemContent
+    )
 }

@@ -1,19 +1,19 @@
 # ios-style-wheel-picker
 
-A modern, highly customizable iOS-style wheel picker for Android built with Jetpack Compose.
+Jetpack Compose로 구축된 안드로이드용의 모던하고 고도로 커스터마이징 가능한 iOS 스타일 휠 피커 라이브러리입니다.
 
-## Features
-- **iOS-Style Physics:** Smooth snapping scroll behavior mimicking native iOS picker behavior.
-- **Visual Depth Effect:** Dynamically scales and fades out items based on their distance from the center.
-- **Fully Generic:** Supports lists of any data type (`List<T>`).
-- **Completely Customizable:** Custom colors, text styles, sizes, and support for completely custom item layouts (e.g., emojis, icons, custom cards).
+## 주요 기능
+- **iOS 스타일 스크롤 효과:** Compose Foundation의 스냅 가이드를 활용한 부드럽고 끈끈한 스크롤 동작 지원.
+- **시각적 입체감 효과:** 중앙과의 거리에 따라 아이템 크기(Scale)와 투명도(Alpha)를 동적으로 변환하여 3D 실린더 휠 형태 제공.
+- **제네릭 타입 지원:** 어떤 형태의 데이터 객체 리스트(`List<T>`)도 즉시 바인딩 가능.
+- **완벽한 스타일 제어:** 텍스트 크기, 폰트 스타일, 중앙 하이라이트 색상 설정 가능 및 사용자 정의 레이아웃 렌더링 람다(`itemContent`) 지원.
 
 ---
 
-## Installation
+## 설치 방법
 
-### Step 1: Add the JitPack repository to your settings
-In your root `settings.gradle.kts` (or `build.gradle`):
+### Step 1. Settings 설정
+프로젝트 루트 폴더의 `settings.gradle.kts` (또는 `build.gradle`) 파일 내 repositories 블록에 JitPack을 등록합니다.
 
 ```kotlin
 dependencyResolutionManagement {
@@ -21,36 +21,37 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://jitpack.io") } // <-- Add this line
+        maven { url = uri("https://jitpack.io") } // <-- 이 줄 추가
     }
 }
 ```
 
-### Step 2: Add the dependency
-In your app module `build.gradle.kts` (or `build.gradle`):
+### Step 2. 라이브러리 의존성 추가
+앱 모듈의 `build.gradle.kts` (또는 `build.gradle`) 파일에 라이브러리를 추가합니다.
 
 ```kotlin
 dependencies {
-    implementation("com.github.cys020628:ios-style-wheel-picker:v1.0.0")
+    implementation("com.github.cys020628:ios-style-wheel-picker:v1.0.1")
 }
 ```
 
 ---
 
-## Usage
+## 사용 방법
 
-### 1. Simple Text Picker (e.g., Year Picker)
+### 1. 기본 텍스트 피커 (예: 연도 선택)
+`IosStylePicker` 또는 `WheelPicker` 컴포넌트를 둘 다 호출해 사용할 수 있습니다.
 
 ```kotlin
 val years = (1990..2030).toList()
 var selectedYear by remember { mutableStateOf(2026) }
 
-WheelPicker(
+IosStylePicker(
     items = years,
     initialItem = selectedYear,
     itemHeight = 36.dp,
     visibleCount = 3,
-    selectedColor = Color(0xFF007AFF), // iOS Blue
+    selectedColor = Color(0xFF007AFF), // iOS 파란색
     unselectedColor = Color.Gray,
     textStyle = TextStyle(fontSize = 18.sp),
     onSelected = { year ->
@@ -59,7 +60,7 @@ WheelPicker(
 )
 ```
 
-### 2. Time Picker (Combining Pickers)
+### 2. 다중 피커 결합 (예: 시간 선택)
 
 ```kotlin
 Row(
@@ -67,42 +68,42 @@ Row(
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically
 ) {
-    // AM/PM Picker
-    WheelPicker(
+    // 오전/오후 선택 휠
+    IosStylePicker(
         items = listOf("오전", "오후"),
         initialItem = "오전",
         modifier = Modifier.weight(1f),
-        onSelected = { ampm -> /* Handle selection */ }
+        onSelected = { ampm -> /* 선택 값 처리 */ }
     )
-    // Hour Picker
-    WheelPicker(
+    // 시(Hour) 선택 휠
+    IosStylePicker(
         items = (1..12).toList(),
         initialItem = 9,
         modifier = Modifier.weight(1f),
-        onSelected = { hour -> /* Handle selection */ }
+        onSelected = { hour -> /* 선택 값 처리 */ }
     )
-    // Minute Picker
-    WheelPicker(
+    // 분(Minute) 선택 휠
+    IosStylePicker(
         items = (0..59).map { String.format("%02d", it) },
         initialItem = "00",
         modifier = Modifier.weight(1f),
-        onSelected = { minute -> /* Handle selection */ }
+        onSelected = { minute -> /* 선택 값 처리 */ }
     )
 }
 ```
 
-### 3. Custom Item Rendering (e.g., Emoji / Complex Layouts)
+### 3. 아이템 레이아웃 커스터마이징 (예: 이모지 / 커스텀 카드)
 
-You can pass an `itemContent` composable lambda to render anything you want:
+`itemContent` 컴포저블 람다식을 정의하면 기본 텍스트 렌더링 대신 임의의 UI를 렌더링할 수 있습니다.
 
 ```kotlin
 val emojis = listOf("😀", "🥰", "😎", "🤔", "🥳")
 
-WheelPicker(
+IosStylePicker(
     items = emojis,
     initialItem = "😀",
     itemHeight = 44.dp,
-    onSelected = { emoji -> /* Handle selection */ }
+    onSelected = { emoji -> /* 선택 값 처리 */ }
 ) { emoji, isSelected ->
     Box(
         modifier = Modifier
@@ -119,7 +120,7 @@ WheelPicker(
 
 ---
 
-## License
+## 라이선스
 ```
 Copyright 2026 cys020628
 

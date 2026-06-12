@@ -59,7 +59,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.cys020628"
                 artifactId = "ios-style-wheel-picker"
-                version = "1.0.0"
+                version = "1.0.1"
             }
         }
     }
