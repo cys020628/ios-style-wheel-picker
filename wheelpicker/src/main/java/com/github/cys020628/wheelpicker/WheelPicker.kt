@@ -81,6 +81,10 @@ fun <T> WheelPicker(
     dividerThickness: Dp = 0.5.dp,
     itemContent: (@Composable (item: T, isSelected: Boolean) -> Unit)? = null,
 ) {
+    // Local copy of cameraDistance to avoid name shadowing/reassignment inside graphicsLayer
+    // graphicsLayer 내부에서 파라미터 이름 충돌로 인한 재할당 에러 방지용 로컬 변수 정의
+    val cameraDistanceVal = cameraDistance
+
     // Calculate initial selection index
     // 초기 선택 인덱스 계산
     val initialIndex = items.indexOf(initialItem).coerceAtLeast(0)
@@ -180,7 +184,7 @@ fun <T> WheelPicker(
                                 rotationX = rotationXVal
                                 scaleX = scaleXVal
                                 scaleY = scaleYVal
-                                cameraDistance = cameraDistance * density
+                                this.cameraDistance = cameraDistanceVal * density
                                 transformOrigin = TransformOrigin(0.5f, 0.5f)
                             },
                         contentAlignment = Alignment.Center
@@ -207,7 +211,7 @@ fun <T> WheelPicker(
                                     rotationX = rotationXVal
                                     scaleX = scaleXVal
                                     scaleY = scaleYVal
-                                    cameraDistance = cameraDistance * density
+                                    this.cameraDistance = cameraDistanceVal * density
                                     transformOrigin = TransformOrigin(0.5f, 0.5f)
                                 }
                         )
